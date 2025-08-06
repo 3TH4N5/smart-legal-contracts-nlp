@@ -1,7 +1,6 @@
 """
 Pipeline Benchmarking System
 Analyzes performance of the smart legal contract generation pipeline
-Updated with dynamic contract limits matching the variable extractor pattern
 """
 
 import json

@@ -1,5 +1,5 @@
 """
-FIXED Multi-Class Clause Classification Model for CUAD Dataset
+Multi-Class Clause Classification Model for CUAD Dataset
 Classifies contract text into 41 different clause types using LegalBERT
 """
 

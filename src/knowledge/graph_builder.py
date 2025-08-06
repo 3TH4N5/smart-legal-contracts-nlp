@@ -1,5 +1,5 @@
 """
-Legal Contract Knowledge Graph Builder - FIXED VERSION
+Legal Contract Knowledge Graph Builder
 Builds Neo4j knowledge graph from extracted legal contract data with LLM integration
 """
 

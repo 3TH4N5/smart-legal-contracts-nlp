@@ -1,7 +1,6 @@
 """
-FIXED Binary Classification Model for CUAD Dataset
+Binary Classification Model for CUAD Dataset
 Predicts whether a context contains an answer to a given question
-IMPROVEMENTS: Less conservative, better data augmentation, custom thresholds
 """
 
 import json

@@ -573,19 +573,17 @@ If you use this work in your research, please cite:
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/3TH4N5/smart-legal-contracts-nlp/issues)
-- **Documentation**: [Project Wiki](https://github.com/3TH4N5/smart-legal-contracts-nlp/wiki)
-- **Email**: your-email@example.com
 
 ## Recent Updates
 
 ### v1.2.0 - Enhanced Pipeline
 
-- ✅ **Unified Double Type System**: All numeric values (integers, decimals, percentages) use Double type
-- ✅ **Dynamic Contract Limits**: Mode-based processing (test=5, default=15, production=100, debug=1)
-- ✅ **FSM Validation**: Formal finite state machine validation with reachability analysis
-- ✅ **Robust JSON Parsing**: Enhanced LLM response parsing with intelligent fallbacks
-- ✅ **Comprehensive Benchmarking**: Academic-grade performance analysis and reporting
-- ✅ **Knowledge Graph Integration**: Full Neo4j support with semantic relationship modeling
+- **Unified Double Type System**: All numeric values (integers, decimals, percentages) use Double type
+- **Dynamic Contract Limits**: Mode-based processing (test=5, default=15, production=100, debug=1)
+- **FSM Validation**: Formal finite state machine validation with reachability analysis
+- **Robust JSON Parsing**: Enhanced LLM response parsing with intelligent fallbacks
+- **Comprehensive Benchmarking**: Academic-grade performance analysis and reporting
+- **Knowledge Graph Integration**: Full Neo4j support with semantic relationship modeling
 
 ## Troubleshooting
 
