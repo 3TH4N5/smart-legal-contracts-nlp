@@ -1,0 +1,136 @@
+# CUAD Clause Type Mappings (USED by preprocessor)
+clause_mappings:
+  "Document Name": "document_name"
+  "Parties": "parties"
+  "Agreement Date": "agreement_date"
+  "Effective Date": "effective_date"
+  "Expiration Date": "expiration_date"
+  "Renewal Term": "renewal_term"
+  "Notice Period To Terminate Renewal": "notice_period_renewal"
+  "Termination For Convenience": "termination_convenience"
+  "Governing Law": "governing_law"
+  "Most Favored Nation": "most_favored_nation"
+  "Non-Compete": "non_compete"
+  "Exclusivity": "exclusivity"
+  "No-Solicit Of Customers": "no_solicit_customers"
+  "Competitive Restriction Exception": "competitive_restriction_exception"
+  "No-Solicit Of Employees": "no_solicit_employees"
+  "Non-Disparagement": "non_disparagement"
+  "Rofr/Rofo/Rofn": "right_of_first_refusal"
+  "Change Of Control": "change_of_control"
+  "Anti-Assignment": "anti_assignment"
+  "Revenue/Profit Sharing": "revenue_profit_sharing"
+  "Price Restrictions": "price_restrictions"
+  "Minimum Commitment": "minimum_commitment"
+  "Volume Restriction": "volume_restriction"
+  "Ip Ownership Assignment": "ip_ownership_assignment"
+  "Joint Ip Ownership": "joint_ip_ownership"
+  "License Grant": "license_grant"
+  "Non-Transferable License": "non_transferable_license"
+  "Affiliate License-Licensor": "affiliate_license_licensor"
+  "Affiliate License-Licensee": "affiliate_license_licensee"
+  "Unlimited/All-You-Can-Eat-License": "unlimited_license"
+  "Irrevocable Or Perpetual License": "irrevocable_perpetual_license"
+  "Source Code Escrow": "source_code_escrow"
+  "Post-Termination Services": "post_termination_services"
+  "Audit Rights": "audit_rights"
+  "Uncapped Liability": "uncapped_liability"
+  "Cap On Liability": "cap_on_liability"
+  "Liquidated Damages": "liquidated_damages"
+  "Warranty Duration": "warranty_duration"
+  "Insurance": "insurance"
+  "Covenant Not To Sue": "covenant_not_to_sue"
+  "Third Party Beneficiary": "third_party_beneficiary"
+
+# Text cleaning (USED by preprocessor)
+text_cleaning:
+  remove_patterns:
+    - 'Page \d+ of \d+'
+    - '^\d+\s*$'
+    - '\[\*{3,}\]'
+    - '\$\[\*{3,}\]'
+    - '\[\.\.\.\*{3,}\.\.\.\]'
+    - '\(\*{3,}\)'
+  non_answers:
+    - "none"
+    - "n/a"
+    - "not applicable"
+    - "not specified"
+  min_answer_length: 2
+  max_context_length: 2048
+
+# Model configurations
+models:
+  classification:
+    # Model selection
+    base_model: "bert-base-uncased"                    # Fallback model
+    legal_model: "nlpaueb/legal-bert-base-uncased"     # Primary LegalBERT model
+    max_length: 512                                    # Already used
+    
+    # Binary classifier training params
+    binary:
+      num_epochs: 3
+      batch_size: 16
+      eval_batch_size: 16
+      learning_rate: 0.00002            # 2e-5 as decimal to avoid string parsing
+      warmup_steps: 100
+      weight_decay: 0.01
+      conservative_factor: 0.4          # For class weights
+      recommended_threshold: 0.3        # For predictions
+    
+    # Multi-class classifier training params 
+    multiclass:
+      num_epochs: 4                     
+      batch_size: 8                     
+      eval_batch_size: 16
+      learning_rate: 0.00002            
+      warmup_steps: 200
+      weight_decay: 0.01
+
+# Training configuration 
+training:
+  # General training settings
+  early_stopping_patience: 3         
+  save_best_model: true
+  random_seed: 42
+  
+  # Logging and evaluation 
+  logging_steps: 500                    
+  eval_steps: 1000                      
+  save_steps: 1000                      
+  save_total_limit: 2
+  
+  # Optimization settings (currently hardcoded)
+  metric_for_best_model_binary: "recall"    
+  metric_for_best_model_multiclass: "f1"    
+  greater_is_better: true
+  dataloader_pin_memory: false
+  remove_unused_columns: false
+
+# Evaluation metrics (USED by classifiers)
+evaluation:
+  classification_metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1"
+    - "confusion_matrix"
+  
+  # Threshold testing 
+  threshold_analysis:
+    thresholds: [0.2, 0.3, 0.4, 0.5, 0.6]
+    recommended_threshold: 0.3
+
+# Paths (USED by all files)
+paths:
+  data:
+    raw: "data/raw"
+    processed: "data/processed"
+  models:
+    saved: "models/saved_models"
+    logs: "models/logs"
+
+# Logging configuration (currently basic logging.basicConfig)
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

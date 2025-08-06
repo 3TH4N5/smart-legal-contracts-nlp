@@ -1,0 +1,130 @@
+# Smart Legal Contracts - .gitignore
+# =============================================================================
+# VIRTUAL ENVIRONMENT AND PYTHON CACHE
+# =============================================================================
+.venv/
+**/__pycache__/
+**pycache**/
+*.py[cod]
+*$py.class
+
+# =============================================================================
+# DATA FILES - Based on visible project structure
+# =============================================================================
+# Exclude large data files
+data/embeddings/
+data/raw/cuad/
+data/raw/samples/
+*.csv
+*.json
+*.jsonl
+*.parquet
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.xlsx
+*.xls
+
+# Keep processed clause datasets and results
+!data/processed/clause_datasets/
+!data/results/
+
+# Raw contract documents
+*.pdf
+*.docx
+*.doc
+*.txt
+
+# =============================================================================
+# MODELS AND WEIGHTS
+# =============================================================================
+# Exclude large model files
+models/logs/
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Keep model structure but exclude weights
+!models/saved_models/binary_classifier/
+!models/saved_models/multiclass_classifier/
+models/saved_models/*/*.bin
+models/saved_models/*/*.pt
+models/saved_models/*/*.pth
+
+# Hugging Face cache
+.cache/
+transformers_cache/
+huggingface_hub/
+
+# =============================================================================
+# OUTPUTS - Exclude all generated content
+# =============================================================================
+
+outputs/*
+!outputs/.gitkeep
+!outputs/*/
+outputs/*/**
+!outputs/*/.gitkeep
+*.out
+*.output
+results/
+
+# =============================================================================
+# LOGS AND TEMPORARY FILES
+# =============================================================================
+logs/
+*.log
+temp/
+tmp/
+cache/
+
+# =============================================================================
+# JUPYTER NOTEBOOKS
+# =============================================================================
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# =============================================================================
+# ENVIRONMENTS AND SECRETS
+# =============================================================================
+.env
+.env.*
+venv/
+env/
+*.key
+*.pem
+secrets.json
+credentials.json
+
+# =============================================================================
+# SYSTEM FILES
+# =============================================================================
+# macOS
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# =============================================================================
+# IDE FILES
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*~
+
+# =============================================================================
+# KEEP IMPORTANT FILES
+# =============================================================================
+!README.md
+!requirements.txt
+!src/
+!scripts/
+!config/
+!notebooks/
+!docs/
