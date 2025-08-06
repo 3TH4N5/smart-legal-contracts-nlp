@@ -18,19 +18,23 @@ This project presents an end-to-end pipeline for automatically transforming natu
 
 ### Prerequisites
 
-- Python 3.8+
-- Node.js 16+ (for Accord Project templates)
-- Neo4j 4.4+ (optional, for knowledge graph features)
+- **Python 3.8+** (recommended: Python 3.10+)
+- **Node.js 16+** (for Accord Project templates)
+- **Neo4j 4.4+** (optional, for knowledge graph features)
+- **Git** (for version control)
+- **8GB+ RAM** (recommended for LLM processing)
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/smart-legal-contracts.git
-cd smart-legal-contracts
+git clone https://github.com/3TH4N5/smart-legal-contracts-nlp.git
+cd smart-legal-contracts-nlp
 
 # Create virtual environment
 python -m venv .venv
+
+# Activate virtual environment
 # On Windows PowerShell:
 .venv\Scripts\Activate.ps1
 # On Windows CMD:
@@ -38,15 +42,72 @@ python -m venv .venv
 # On Linux/Mac:
 source .venv/bin/activate
 
-# Install dependencies
+# Upgrade pip and install build tools
+pip install --upgrade pip setuptools wheel
+
+# Install core dependencies (this may take 5-10 minutes)
 pip install -r requirements.txt
 
-# Install Accord Project CLI (for template validation)
+# Install Accord Project CLI (requires Node.js)
 npm install -g @accordproject/cicero-cli
 
-# Download required models
+# Download CUAD dataset and setup directories
+python scripts/download_cuad.py
+
+# Download and setup NLP models
 python scripts/download_models.py
+
+# Verify installation
+python -c "import torch, transformers, ollama; print('✓ Core libraries installed')"
 ```
+
+### Initial Data Processing
+
+After setup, run these commands to build up the pipeline components:
+
+```bash
+# 1. Preprocess CUAD dataset
+python -m src.preprocessing.cuad_preprocessor
+
+# 2. Train binary classifier (answer detection)
+python -m src.classification.binary_classifier
+
+# 3. Train multiclass classifier (clause categorization)
+python -m src.classification.multiclass_classifier
+
+# 4. Generate clause embeddings for similarity matching
+python -m src.embeddings.clause_embedder
+
+# 5. Build similarity inference engine
+python -m src.inference.similarity_engine
+
+# 6. Run comprehensive evaluation
+python -m docs.evaluation.comprehensive_evaluator
+```
+
+### Dependencies Overview
+
+The project uses 100+ carefully selected packages organized by category:
+
+**Core ML/NLP:**
+
+- PyTorch, Transformers, Sentence-Transformers
+- SpaCy, NLTK, TextBlob for text processing
+
+**Data Processing:**
+
+- Pandas, NumPy, Scikit-learn
+- PyArrow for efficient data handling
+
+**LLM Integration:**
+
+- Ollama for local LLM processing
+- OpenAI and Anthropic APIs (optional)
+
+**Template Generation:**
+
+- Jinja2, Markdown, LXML
+- Custom Accord Project integration
 
 ### Configuration Files
 
@@ -70,6 +131,27 @@ config/
 # Pull required model
 ollama pull llama3
 ```
+
+### Dataset Download
+
+The project uses the **Contract Understanding Atticus Dataset (CUAD)**:
+
+```bash
+# Automatic download (recommended)
+python scripts/download_cuad.py
+
+# Manual download if automatic fails:
+# 1. Visit: https://github.com/TheAtticusProject/cuad
+# 2. Download data.zip
+# 3. Extract to: data/raw/cuad/
+```
+
+The download script will:
+
+- Create proper directory structure
+- Download from official CUAD GitHub repository
+- Extract and organize dataset files
+- Verify data integrity and structure
 
 ### Neo4j Setup (Optional)
 
@@ -197,7 +279,29 @@ The project uses the **Contract Understanding Atticus Dataset (CUAD)**:
 - **Size**: 13,000+ annotated legal clauses from 510 commercial contracts
 - **Source**: SEC filings with expert legal annotations
 - **Categories**: 41 distinct clause types
+- **Download**: Automated via `python scripts/download_cuad.py`
 - **Processing**: Automatic discovery and normalization of contract data
+
+### CUAD Download Script Features
+
+The `scripts/download_cuad.py` script provides:
+
+```python
+def download_cuad():
+    """Download CUAD dataset from GitHub with fallback URLs"""
+    # Tries multiple GitHub URLs for reliability
+    # Creates proper directory structure
+    # Handles extraction and cleanup
+
+def explore_cuad():
+    """Explore downloaded CUAD data structure"""
+    # Analyzes file types and sizes
+    # Validates data integrity
+    # Provides data overview statistics
+```
+
+**Manual Download Fallback:**
+If automatic download fails, the script provides clear instructions for manual setup from the official CUAD repository.
 
 ## System Architecture
 
@@ -280,7 +384,7 @@ smart-legal-contracts/
 │   ├── classification/                   # Clause classification
 │   ├── embeddings/                       # Vector embeddings
 │   ├── extraction/                       # Variable extraction
-│   ├── fsm/                              # State machine generation
+│   ├── fsm/                             # State machine generation
 │   ├── generation/                       # Template generation
 │   ├── inference/                        # Model inference
 │   ├── knowledge/                        # Knowledge graph
@@ -291,6 +395,24 @@ smart-legal-contracts/
 ├── .gitignore                           # Git ignore rules
 ├── README.md                            # Project documentation
 └── requirements.txt                     # Python dependencies
+```
+
+## Testing
+
+```bash
+# Unit tests
+python -m pytest tests/unit/
+
+# Integration tests
+python -m pytest tests/integration/
+
+# End-to-end pipeline tests
+python -m pytest tests/e2e/
+
+# Component-specific tests
+python -m pytest tests/extraction/
+python -m pytest tests/generation/
+python -m pytest tests/fsm/
 ```
 
 ## Output Structure
@@ -450,20 +572,20 @@ If you use this work in your research, please cite:
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-username/smart-legal-contracts/issues)
-- **Documentation**: [Project Wiki](https://github.com/your-username/smart-legal-contracts/wiki)
+- **Issues**: [GitHub Issues](https://github.com/3TH4N5/smart-legal-contracts-nlp/issues)
+- **Documentation**: [Project Wiki](https://github.com/3TH4N5/smart-legal-contracts-nlp/wiki)
 - **Email**: your-email@example.com
 
 ## Recent Updates
 
 ### v1.2.0 - Enhanced Pipeline
 
-- **Unified Double Type System**: All numeric values (integers, decimals, percentages) use Double type
-- **Dynamic Contract Limits**: Mode-based processing (test=5, default=15, production=100, debug=1)
-- **FSM Validation**: Formal finite state machine validation with reachability analysis
-- **Robust JSON Parsing**: Enhanced LLM response parsing with intelligent fallbacks
-- **Comprehensive Benchmarking**: Academic-grade performance analysis and reporting
-- **Knowledge Graph Integration**: Full Neo4j support with semantic relationship modeling
+- ✅ **Unified Double Type System**: All numeric values (integers, decimals, percentages) use Double type
+- ✅ **Dynamic Contract Limits**: Mode-based processing (test=5, default=15, production=100, debug=1)
+- ✅ **FSM Validation**: Formal finite state machine validation with reachability analysis
+- ✅ **Robust JSON Parsing**: Enhanced LLM response parsing with intelligent fallbacks
+- ✅ **Comprehensive Benchmarking**: Academic-grade performance analysis and reporting
+- ✅ **Knowledge Graph Integration**: Full Neo4j support with semantic relationship modeling
 
 ## Troubleshooting
 
