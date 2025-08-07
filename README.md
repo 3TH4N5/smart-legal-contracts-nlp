@@ -495,6 +495,16 @@ After running the knowledge graph builder:
 ### Sample Knowledge Graph Queries
 
 ```cypher
+
+// Find all data for a specific contract
+MATCH (c:Contract {contract_id: "ENERGOUSCORP_03_16_2017-EX-10.24-STRATEGIC_ALLIANCE_AGREEMENT"})
+OPTIONAL MATCH (c)-[r1:CONTAINS]->(cl:Clause)
+OPTIONAL MATCH (c)-[r2:INVOLVES]->(p:Party)
+OPTIONAL MATCH (cl)-[r3:HAS_VARIABLE]->(v:Variable)
+OPTIONAL MATCH (cl)-[r4:GENERATES]->(t:Template)
+OPTIONAL MATCH (t)-[r5:USES_VARIABLES]->(tv:Variable)
+RETURN c, r1, cl, r2, p, r3, v, r4, t, r5, tv
+
 // Find liability limitation clauses with monetary caps
 MATCH (c:Contract)-[:CONTAINS]->(cl:Clause {clause_type: "cap_on_liability"})
       -[:HAS_VARIABLE]->(v:Variable {var_type: "MonetaryAmount"})
@@ -510,14 +520,6 @@ RETURN clause_type, total_clauses, clauses_with_templates,
        round(100.0 * clauses_with_templates / total_clauses) as success_rate
 ORDER BY success_rate DESC
 
-// Find all data for a specific contract
-MATCH (c:Contract {contract_id: "ENERGOUSCORP_03_16_2017-EX-10.24-STRATEGIC_ALLIANCE_AGREEMENT"})
-OPTIONAL MATCH (c)-[r1:CONTAINS]->(cl:Clause)
-OPTIONAL MATCH (c)-[r2:INVOLVES]->(p:Party)
-OPTIONAL MATCH (cl)-[r3:HAS_VARIABLE]->(v:Variable)
-OPTIONAL MATCH (cl)-[r4:GENERATES]->(t:Template)
-OPTIONAL MATCH (t)-[r5:USES_VARIABLES]->(tv:Variable)
-RETURN c, r1, cl, r2, p, r3, v, r4, t, r5, tv
 ```
 
 ## Contributing
