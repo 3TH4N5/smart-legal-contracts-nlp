@@ -556,7 +556,6 @@ If you use this work in your research, please cite:
 ```bibtex
 @mastersthesis{smartlegalcontracts2025,
   title={Leveraging NLP and LLMs for Smart Legal Contracts in Accord Project Format},
-  author={[Your Name]},
   year={2025},
   school={University College London},
   type={MSc Business Analytics Dissertation}
