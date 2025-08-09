@@ -1,0 +1,128 @@
+{
+  "extraction_rules": {
+    "contracts": {
+      "id_field": "contract_id",
+      "title_extraction": {
+        "enabled": true,
+        "llm_prompt": "Generate ONLY a contract title. No explanations. Format: '[Party1] & [Party2] [Agreement Type]' or '[Main Topic] Agreement'. Max 40 characters. Example: 'Apple & Microsoft License Agreement'"
+      }
+    },
+    "parties": {
+      "extract_from": ["extractions.parties"],
+      "entity_type_detection": {
+        "enabled": true,
+        "patterns": {
+          "corporation": ["corp", "inc", "incorporated", "company", "co"],
+          "llc": ["llc", "l.l.c"],
+          "partnership": ["partnership", "llp", "l.l.p"],
+          "individual": ["individual", "person"]
+        }
+      }
+    },
+    "clauses": {
+      "include_original_text": true,
+      "max_text_length": 2000,
+      "calculate_coverage": true,
+      "clause_types": [
+        "parties",
+        "effective_date",
+        "expiration_date", 
+        "agreement_date",
+        "governing_law",
+        "renewal_term",
+        "notice_period_renewal",
+        "termination_convenience",
+        "most_favored_nation",
+        "non_compete",
+        "exclusivity",
+        "no_solicit_customers",
+        "competitive_restriction_exception",
+        "no_solicit_employees",
+        "non_disparagement",
+        "right_of_first_refusal",
+        "change_of_control",
+        "anti_assignment",
+        "revenue_profit_sharing",
+        "price_restrictions",
+        "minimum_commitment",
+        "volume_restriction",
+        "ip_ownership_assignment",
+        "joint_ip_ownership",
+        "license_grant",
+        "non_transferable_license",
+        "affiliate_license_licensor",
+        "affiliate_license_licensee",
+        "unlimited_license",
+        "irrevocable_perpetual_license",
+        "source_code_escrow",
+        "post_termination_services",
+        "audit_rights",
+        "uncapped_liability",
+        "cap_on_liability",
+        "liquidated_damages",
+        "warranty_duration",
+        "insurance",
+        "covenant_not_to_sue",
+        "third_party_beneficiary",
+        "document_name"
+      ]
+    },
+    "variables": {
+      "include_null_values": false,
+      "type_mapping": {
+        "MonetaryAmount": "monetary",
+        "Duration": "temporal", 
+        "DateTime": "temporal",
+        "Boolean": "boolean",
+        "Double": "numeric",
+        "String": "text",
+        "Party[]": "entity_list"
+      },
+      "value_formatting": {
+        "monetary": "format_money",
+        "temporal": "format_duration", 
+        "numeric": "format_number"
+      },
+      "variable_categories": {
+        "contract_lifecycle": ["effectiveDate", "expirationDate", "signatureDate", "contractDuration"],
+        "parties_entities": ["parties"],
+        "legal_governance": ["governingLaw", "governingJurisdiction"],
+        "termination_renewal": ["isAutomaticRenewal", "renewalDuration", "renewalNoticePeriod", "canTerminateForConvenience", "terminationFee", "terminationNoticePeriod"],
+        "restrictions_obligations": ["hasNonCompete", "nonCompeteDuration", "isExclusive", "hasNonSolicitCustomer", "hasNonSolicitEmployee", "hasNonDisparagement"],
+        "financial_commercial": ["hasRevenueSharing", "revenueSharePercentage", "hasMinimumCommitment", "minimumCommitmentAmount", "minimumCommitmentVolume"],
+        "intellectual_property": ["assignsIPOwnership", "hasJointIPOwnership", "licenseScope", "sublicensingRights", "isTransferable", "hasUnlimitedLicense"],
+        "liability_risk": ["hasUncappedLiability", "hasCapOnLiability", "capAmount", "hasLiquidatedDamagesClause", "liquidatedDamagesAmount", "hasInsuranceRequirement"],
+        "rights_controls": ["hasRightOfFirstRefusal", "hasChangeOfControlClause", "hasAssignmentRestriction", "hasMostFavoredNation"],
+        "operational": ["hasPostTerminationObligations", "hasAuditRights", "auditFrequency", "hasWarrantyObligation", "warrantyDuration"]
+      }
+    }
+  },
+  "llm_integration": {
+    "enabled": true,
+    "model": "llama3",
+    "tasks": {
+      "concept_extraction": {
+        "enabled": true,
+        "prompt": "Identify the main legal concepts in this clause text (max 5). Return as comma-separated list from these categories: termination, liability, intellectual_property, non_compete, exclusivity, revenue_sharing, governance, assignment, renewal, warranty, insurance, audit. Text: {text}"
+      },
+      "relationship_detection": {
+        "enabled": false,
+        "prompt": "What is the relationship between these two clauses? {clause1} | {clause2}"
+      },
+      "party_role_detection": {
+        "enabled": true,
+        "prompt": "What role does this party play in the contract? Options: client, vendor, licensor, licensee, buyer, seller, other. Party: {party_name}, Context: {clause_text}"
+      }
+    },
+    "options": {
+      "temperature": 0.1,
+      "max_tokens": 100
+    }
+  },
+  "similarity_processing": {
+    "enabled": true,
+    "use_existing_matrix": true,
+    "threshold": 0.7,
+    "max_similar_clauses": 5
+  }
+}

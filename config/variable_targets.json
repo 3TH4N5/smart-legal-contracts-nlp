@@ -1,0 +1,162 @@
+{
+  "parties": {
+    "parties": { "type": "Party[]" }
+  },
+  "effective_date": {
+    "effectiveDate": { "type": "DateTime" }
+  },
+  "expiration_date": {
+    "expirationDate": { "type": "DateTime" },
+    "contractDuration": { "type": "Duration" },
+    "isAutomaticRenewal": { "type": "Boolean" }
+  },
+  "agreement_date": {
+    "signatureDate": { "type": "DateTime" }
+  },
+  "governing_law": {
+    "governingLaw": { "type": "String" },
+    "governingJurisdiction": { "type": "String" }
+  },
+  "renewal_term": {
+    "renewalDuration": { "type": "Duration" },
+    "isAutomaticRenewal": { "type": "Boolean" }
+  },
+  "notice_period_renewal": {
+    "renewalNoticePeriod": { "type": "Duration" },
+    "noticePeriodToTerminate": { "type": "Duration" }
+  },
+  "termination_convenience": {
+    "canTerminateForConvenience": { "type": "Boolean" },
+    "terminationFee": { "type": "MonetaryAmount" },
+    "terminationNoticePeriod": { "type": "Duration" }
+  },
+  "most_favored_nation": {
+    "hasMostFavoredNation": { "type": "Boolean" }
+  },
+  "non_compete": {
+    "hasNonCompete": { "type": "Boolean" },
+    "nonCompeteDuration": { "type": "Duration" }
+  },
+  "exclusivity": {
+    "isExclusive": { "type": "Boolean" }
+  },
+  "no_solicit_customers": {
+    "hasNonSolicitCustomer": { "type": "Boolean" }
+  },
+  "competitive_restriction_exception": {
+    "hasCompetitiveRestrictionException": { "type": "Boolean" }
+  },
+  "no_solicit_employees": {
+    "hasNonSolicitEmployee": { "type": "Boolean" },
+    "employeeSolicitationDuration": { "type": "Duration" }
+  },
+  "non_disparagement": {
+    "hasNonDisparagement": { "type": "Boolean" },
+    "nonDisparagementDuration": { "type": "Duration" },
+    "mutualNonDisparagement": { "type": "Boolean" }
+  },
+  "right_of_first_refusal": {
+    "hasRightOfFirstRefusal": { "type": "Boolean" },
+    "rofrNoticePeriod": { "type": "Duration" }
+  },
+  "change_of_control": {
+    "hasChangeOfControlClause": { "type": "Boolean" },
+    "requiresChangeOfControlNotice": { "type": "Boolean" },
+    "changeOfControlNoticePeriod": { "type": "Duration" }
+  },
+  "anti_assignment": {
+    "hasAssignmentRestriction": { "type": "Boolean" }
+  },
+  "revenue_profit_sharing": {
+    "hasRevenueSharing": { "type": "Boolean" },
+    "revenueSharePercentage": { "type": "Double" }
+  },
+  "price_restrictions": {
+    "hasPriceRestrictions": { "type": "Boolean" },
+    "pricingStructure": {"type":"String"}
+  },
+  "minimum_commitment": {
+    "hasMinimumCommitment": { "type": "Boolean" },
+    "minimumCommitmentAmount": { "type": "MonetaryAmount" },
+    "minimumCommitmentVolume": { "type": "Double" }
+  },
+  "volume_restriction": {
+    "hasVolumeRestriction": { "type": "Boolean" },
+    "volumeLimit": { "type": "Double" }
+  },
+  "ip_ownership_assignment": {
+    "assignsIPOwnership": { "type": "Boolean" }
+  },
+  "joint_ip_ownership": {
+    "hasJointIPOwnership": { "type": "Boolean" }
+  },
+  "license_grant": {
+    "licenseScope": { "type": "String" }
+  },
+  "non_transferable_license": {
+    "isTransferable": { "type": "Boolean" },
+    "transferRequiresConsent": { "type": "Boolean" }
+  },
+  "affiliate_license_licensor": {
+    "includesLicensorAffiliateIP": { "type": "Boolean" }
+  },
+  "affiliate_license_licensee": {
+    "includesLicenseeAffiliateIP": { "type": "Boolean" }
+  },
+  "unlimited_license": {
+    "hasUnlimitedLicense": { "type": "Boolean" }
+  },
+  "irrevocable_perpetual_license": {
+    "hasIrrevocableLicense": { "type": "Boolean" },
+    "isPerpetual": { "type": "Boolean" }
+  },
+  "source_code_escrow": {
+    "hasSourceCodeEscrow": { "type": "Boolean" }
+  },
+  "post_termination_services": {
+    "hasPostTerminationObligations": { "type": "Boolean" },
+    "postTerminationDuration": { "type": "Duration" }
+  },
+  "audit_rights": {
+    "hasAuditRights": { "type": "Boolean" },
+    "auditFrequency": { "type": "Duration" },
+    "auditNoticePeriod": { "type": "Duration" }
+  },
+  "uncapped_liability": {
+    "hasUncappedLiability": { "type": "Boolean" }
+  },
+  "cap_on_liability": {
+    "hasCapOnLiability": { "type": "Boolean" },
+    "capAmount": { "type": "MonetaryAmount" },
+    "CapPeriod": { "type": "Duration" },
+    "isCapCalculated": { "type": "Boolean" }
+  },
+  "liquidated_damages": {
+    "hasLiquidatedDamagesClause": { "type": "Boolean" },
+    "liquidatedDamagesAmount": { "type": "MonetaryAmount" },
+    "isDamagesCalculated": { "type": "Boolean" },
+    "damagesCalculationBasis": { "type": "String" }
+  },
+  "warranty_duration": {
+    "hasWarrantyObligation": { "type": "Boolean" },
+    "warrantyDuration": { "type": "Duration" }
+  },
+  "insurance": {
+    "hasInsuranceRequirement": { "type": "Boolean" },
+    "insuranceCoverageAmount": { "type": "MonetaryAmount" },
+    "additionalInsured": { "type": "Boolean" },
+    "InsurancePeriod": { "type": "Duration" },
+    "isInsuranceCalculated": { "type": "Boolean" },
+    "insuranceCalculationBasis": { "type": "String" }
+  },
+  "covenant_not_to_sue": {
+    "hasCovenantNotToSue": { "type": "Boolean" },
+    "covenantDuration": { "type": "Duration" }
+  },
+  "third_party_beneficiary": {
+    "hasThirdPartyBeneficiary": { "type": "Boolean" }
+  },
+  "document_name": {
+    "documentTitle": { "type": "String" }
+  }
+}

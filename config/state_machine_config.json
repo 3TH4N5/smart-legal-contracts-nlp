@@ -1,0 +1,349 @@
+{
+  "metadata": {
+    "version": "1.2.0",
+    "description": "State machine configuration for LLM-based contract lifecycle extraction with FSM validation",
+    "generation_method": "LLM semantic analysis with robust JSON parsing and formal FSM validation",
+    "last_updated": "2025-07-23",
+    "features": [
+      "Enhanced state classification",
+      "Business logic validation", 
+      "FSM property validation",
+      "Confidence-based quality metrics"
+    ]
+  },
+
+  "contract_lifecycle_states": {
+    "core_states": [
+      "draft",
+      "under_review", 
+      "approved",
+      "signed",
+      "effective",
+      "active",
+      "renewal_notice_period",
+      "renewing",
+      "termination_notice_period", 
+      "terminating",
+      "terminated",
+      "expired"
+    ],
+    "conditional_states": [
+      "suspended",
+      "in_breach",
+      "cure_period",
+      "dispute_resolution",
+      "post_termination_obligations"
+    ],
+    "state_categories": {
+      "formation": ["draft", "under_review", "approved", "signed"],
+      "operational": ["effective", "active", "performing", "executing"],
+      "modification": ["suspended", "in_breach", "cure_period", "dispute_resolution", "renewal_notice_period", "renewing"],
+      "termination": ["termination_notice_period", "terminating", "terminated", "expired", "post_termination_obligations"]
+    }
+  },
+
+  "state_transitions": {
+    "standard_flow": {
+      "draft": ["under_review"],
+      "under_review": ["approved", "draft"],
+      "approved": ["signed", "draft"], 
+      "signed": ["effective"],
+      "effective": ["active"],
+      "active": ["renewal_notice_period", "termination_notice_period", "in_breach", "suspended", "expired"],
+      "renewal_notice_period": ["renewing", "termination_notice_period"],
+      "renewing": ["active"],
+      "termination_notice_period": ["terminating"], 
+      "terminating": ["terminated"],
+      "in_breach": ["cure_period", "terminating"],
+      "cure_period": ["active", "terminating"],
+      "suspended": ["active", "terminating"],
+      "terminated": ["post_termination_obligations"],
+      "expired": ["post_termination_obligations"],
+      "post_termination_obligations": []
+    },
+    "business_logic_rules": {
+      "invalid_transitions": [
+        ["termination", "formation"],
+        ["termination", "operational"]
+      ],
+      "terminal_state_rules": {
+        "no_outgoing_transitions": true,
+        "exceptions": ["self_loops"]
+      },
+      "category_transition_rules": {
+        "formation_to_termination": "allowed_with_conditions",
+        "termination_to_formation": "forbidden",
+        "termination_to_operational": "forbidden"
+      }
+    }
+  },
+
+  "fsm_validation_rules": {
+    "reachability": {
+      "check_unreachable_states": true,
+      "minimum_reachability_percentage": 80.0,
+      "warn_threshold": 90.0
+    },
+    "determinism": {
+      "check_non_deterministic_transitions": true,
+      "allow_self_loops": true,
+      "warn_on_multiple_targets": true
+    },
+    "connectivity": {
+      "check_orphaned_states": true,
+      "require_initial_state": true,
+      "require_terminal_states": true
+    },
+    "terminal_states": {
+      "validate_no_outgoing": true,
+      "validate_reachability": true,
+      "required_terminal_indicators": ["terminated", "expired", "final", "completed"]
+    }
+  },
+
+  "confidence_thresholds": {
+    "state_confidence": {
+      "high": 0.8,
+      "medium": 0.6,
+      "low": 0.4
+    },
+    "transition_confidence": {
+      "high": 0.8,
+      "medium": 0.6,
+      "low": 0.4
+    },
+    "overall_fsm_quality": {
+      "excellent": 0.9,
+      "good": 0.7,
+      "acceptable": 0.5
+    }
+  },
+
+  "xstate_templates": {
+    "basic_contract": {
+      "id": "contract-lifecycle",
+      "initial": "draft",
+      "context": {
+        "contractId": "",
+        "parties": [],
+        "effectiveDate": null,
+        "expirationDate": null,
+        "validationResults": {
+          "isValidFSM": true,
+          "reachabilityPercentage": 100,
+          "isDeterministic": true,
+          "warningsCount": 0
+        }
+      },
+      "states": {
+        "draft": {
+          "meta": {
+            "category": "formation",
+            "description": "Contract is in draft form"
+          },
+          "on": {
+            "SUBMIT_FOR_REVIEW": "under_review"
+          }
+        },
+        "under_review": {
+          "meta": {
+            "category": "formation",
+            "description": "Contract is being reviewed"
+          },
+          "on": {
+            "APPROVE": "approved",
+            "REJECT": "draft"
+          }
+        },
+        "approved": {
+          "meta": {
+            "category": "formation",
+            "description": "Contract has been approved"
+          },
+          "on": {
+            "SIGN": "signed",
+            "REVISE": "draft"
+          }
+        },
+        "signed": {
+          "meta": {
+            "category": "formation",
+            "description": "Contract has been signed"
+          },
+          "on": {
+            "BECOME_EFFECTIVE": "effective"
+          }
+        },
+        "effective": {
+          "meta": {
+            "category": "operational",
+            "description": "Contract is effective"
+          },
+          "on": {
+            "ACTIVATE": "active"
+          }
+        },
+        "active": {
+          "meta": {
+            "category": "operational",
+            "description": "Contract is actively operating"
+          },
+          "on": {
+            "RENEWAL_NOTICE": "renewal_notice_period",
+            "TERMINATION_NOTICE": "termination_notice_period",
+            "BREACH": "in_breach",
+            "SUSPEND": "suspended",
+            "EXPIRE": "expired"
+          }
+        },
+        "renewal_notice_period": {
+          "meta": {
+            "category": "modification",
+            "description": "Contract is in renewal notice period"
+          },
+          "on": {
+            "RENEW": "renewing",
+            "DECLINE_RENEWAL": "termination_notice_period"
+          }
+        },
+        "renewing": {
+          "meta": {
+            "category": "modification",
+            "description": "Contract is being renewed"
+          },
+          "on": {
+            "RENEWAL_COMPLETE": "active"
+          }
+        },
+        "termination_notice_period": {
+          "meta": {
+            "category": "termination",
+            "description": "Contract is in termination notice period"
+          },
+          "on": {
+            "TERMINATE": "terminating"
+          }
+        },
+        "terminating": {
+          "meta": {
+            "category": "termination",
+            "description": "Contract is in process of termination"
+          },
+          "on": {
+            "TERMINATION_COMPLETE": "terminated"
+          }
+        },
+        "in_breach": {
+          "meta": {
+            "category": "modification",
+            "description": "Contract is in breach"
+          },
+          "on": {
+            "START_CURE_PERIOD": "cure_period",
+            "IMMEDIATE_TERMINATION": "terminating"
+          }
+        },
+        "cure_period": {
+          "meta": {
+            "category": "modification",
+            "description": "Contract is in cure period for breach"
+          },
+          "on": {
+            "CURE_BREACH": "active",
+            "CURE_FAILED": "terminating"
+          }
+        },
+        "suspended": {
+          "meta": {
+            "category": "modification",
+            "description": "Contract is suspended"
+          },
+          "on": {
+            "RESUME": "active",
+            "TERMINATE": "terminating"
+          }
+        },
+        "terminated": {
+          "type": "final",
+          "meta": {
+            "category": "termination",
+            "description": "Contract has been terminated"
+          },
+          "on": {
+            "BEGIN_POST_OBLIGATIONS": "post_termination_obligations"
+          }
+        },
+        "expired": {
+          "type": "final",
+          "meta": {
+            "category": "termination",
+            "description": "Contract has expired naturally"
+          },
+          "on": {
+            "BEGIN_POST_OBLIGATIONS": "post_termination_obligations"
+          }
+        },
+        "post_termination_obligations": {
+          "type": "final",
+          "meta": {
+            "category": "termination",
+            "description": "Post-termination obligations phase"
+          }
+        }
+      }
+    }
+  },
+
+  "validation_rules": {
+    "required_states": ["draft", "active", "terminated"],
+    "terminal_states": ["post_termination_obligations", "terminated", "expired"],
+    "minimum_transitions": 3,
+    "maximum_parallel_states": 2,
+    "fsm_quality_requirements": {
+      "minimum_reachability": 0.8,
+      "require_deterministic": false,
+      "maximum_warnings": 5,
+      "minimum_confidence": 0.5
+    }
+  },
+
+  "output_formats": {
+    "xstate_json": true,
+    "mermaid_diagram": true,
+    "graphviz_dot": true,
+    "stately_ai": true,
+    "validation_report": true
+  },
+
+  "llm_configuration": {
+    "model": "llama3",
+    "temperature": 0.1,
+    "seed": 42,
+    "num_predict": 1000,
+    "top_p": 0.9,
+    "stop_tokens": ["}]}", "}\n\n", "```", "\n\n\n"],
+    "retry_attempts": 3,
+    "cache_responses": true
+  },
+
+  "quality_metrics": {
+    "state_quality_indicators": [
+      "confidence_score",
+      "evidence_availability", 
+      "clause_type_mapping",
+      "category_classification"
+    ],
+    "fsm_quality_indicators": [
+      "reachability_percentage",
+      "determinism_check",
+      "terminal_state_validation",
+      "business_logic_compliance"
+    ],
+    "overall_quality_weights": {
+      "state_confidence": 0.3,
+      "transition_confidence": 0.2,
+      "fsm_validation": 0.3,
+      "business_logic": 0.2
+    }
+  }
+}

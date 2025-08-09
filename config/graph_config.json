@@ -1,0 +1,76 @@
+{
+  "neo4j": {
+    "uri": "bolt://localhost:7687",
+    "username": "neo4j",
+    "password": "password",
+    "database": "neo4j"
+  },
+  "graph_schema": {
+    "nodes": {
+      "Contract": {
+        "properties": ["contract_id", "title", "created_at"],
+        "indexes": ["contract_id"]
+      },
+      "Party": {
+        "properties": ["party_id", "name", "entity_type"],
+        "indexes": ["party_id", "name"]
+      },
+      "Clause": {
+        "properties": ["clause_id", "clause_type", "original_text", "coverage_score"],
+        "indexes": ["clause_type"]
+      },
+      "Variable": {
+        "properties": ["var_name", "var_type", "value", "extracted_value"],
+        "indexes": ["var_name", "var_type"]
+      },
+      "Template": {
+        "properties": ["template_id", "template_name", "priority", "generated_at", "coverage_score", "clause_type", "original_text_preserved", "file_path"],
+        "indexes": ["template_id", "clause_type"]
+      }
+    },
+    "relationships": {
+      "CONTAINS": {
+        "from": "Contract",
+        "to": "Clause",
+        "properties": []
+      },
+      "INVOLVES": {
+        "from": "Contract", 
+        "to": "Party",
+        "properties": ["role"]
+      },
+      "HAS_VARIABLE": {
+        "from": "Clause",
+        "to": "Variable", 
+        "properties": ["extraction_confidence"]
+      },
+      "GENERATES": {
+        "from": "Clause",
+        "to": "Template",
+        "properties": ["generated_at", "coverage_score"]
+      },
+      "BASED_ON": {
+        "from": "Template",
+        "to": "Contract",
+        "properties": ["template_type"]
+      },
+      "USES_VARIABLES": {
+        "from": "Template",
+        "to": "Variable",
+        "properties": ["variable_usage"]
+      },
+      "SIMILAR_TO": {
+        "from": "Clause",
+        "to": "Clause",
+        "properties": ["similarity_score"]
+      }
+    }
+  },
+  "processing": {
+    "batch_size": 100,
+    "similarity_threshold": 0.7,
+    "min_coverage_score": 0.1,
+    "create_indexes": true,
+    "clear_existing": false
+  }
+}
