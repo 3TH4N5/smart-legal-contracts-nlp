@@ -18,6 +18,8 @@ data/raw/samples/
 *.csv
 *.json
 *.jsonl
+*.json
+!config/*.json
 *.parquet
 *.pkl
 *.pickle
