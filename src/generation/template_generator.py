@@ -344,32 +344,33 @@ class TemplateGenerator:
             return self._replace_simple_ciceromark(text, var_name, value)
 
     def _replace_double_ciceromark(self, text: str, var_name: str, value: Any) -> str:
-        """Replace double values (including percentages AND integers) with CiceroMark format."""
+        """Replace double values with CiceroMark format - FIXED VERSION."""
 
-        # Handle both numeric and percentage contexts
         if isinstance(value, (int, float)):
             numeric_value = float(value)
         else:
-            # Try to parse from string or other formats
             numeric_value = self._parse_numeric_value(str(value))
             if numeric_value is None:
                 return text
 
-        # Generate all possible representations of this value (integers, decimals, percentages)
+        # Generate all possible representations
         representations = self._generate_all_numeric_representations(numeric_value)
 
-        # Try to replace each representation
+        # Sort by length (longest first) to prioritize complete phrases
+        representations.sort(key=len, reverse=True)
+
+        # Try to replace each representation (longest matches first)
         for representation in representations:
             if representation in text:
                 replacement = f"{{{{{var_name}}}}}"
                 text = text.replace(representation, replacement, 1)
                 self.stats.double_replacements += 1
                 logger.debug(
-                    f"Replaced double/percentage/integer: '{representation}' -> '{replacement}'"
+                    f"Replaced complete phrase: '{representation}' -> '{replacement}'"
                 )
-                return text
+                return text  # Stop after first successful replacement
 
-        # If no exact match, try pattern-based replacement
+        # Fallback to pattern-based replacement if no exact match
         return self._replace_numeric_patterns(text, var_name, numeric_value)
 
     def _parse_numeric_value(self, text: str) -> Optional[float]:
