@@ -184,7 +184,7 @@ For knowledge graph functionality:
 1. Start Neo4j service
 2. Open browser to http://localhost:7474
 3. Login with username: `neo4j`, password: `neo4j`
-4. Set new password to `password` (or update config file accordingly)
+4. Set new password to `password`
 
 **Install Python Driver:**
 
